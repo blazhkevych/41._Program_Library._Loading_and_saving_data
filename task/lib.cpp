@@ -82,7 +82,6 @@ void AddBooks(ArrayBooks& b)
 // Удаление книги по указанному критерию
 void RemoveBookBySpecCriteria(ArrayBooks& b)
 {
-	//2,53,20
 	system("cls");
 	char criterion[][50] =
 	{
@@ -295,9 +294,7 @@ void SearchBookByAuthor(ArrayBooks& b)
 		}
 	}
 	if (flag == false)
-	{
 		cout << "Книга не найдена!";
-	}
 	_getch();
 	return;
 }
@@ -323,9 +320,7 @@ void BookSearchByTitle(ArrayBooks& b)
 		}
 	}
 	if (flag == false)
-	{
 		cout << "Книга не найдена!";
-	}
 	_getch();
 	return;
 }
