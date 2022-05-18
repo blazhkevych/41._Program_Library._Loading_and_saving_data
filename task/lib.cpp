@@ -2,11 +2,13 @@
 #include <iostream>
 #include <conio.h>
 #include <iomanip>
+#include <io.h>
 #include "lib.h"
 using std::cout;
 using std::endl;
 using std::cin;
 using std::setw;
+using std::flush;
 
 // Меню
 void Menu(char ptr[][50], int row)
@@ -67,7 +69,7 @@ void AddBooks(ArrayBooks& b)
 	for (int i = 0; i < number; i++)
 	{
 		Book* book = new Book;
-		cout << "Введите данные ";
+		cout << flush << "Введите данные ";
 		cout << i + 1;
 		cout << " книги\n";
 		InputData(book);
@@ -198,6 +200,7 @@ void RemoveBookBySpecCriteria(ArrayBooks& b)
 // Редактирование книги
 void EditBook(ArrayBooks& b)
 {
+	cin.get();
 	system("cls");
 	char Title[100], Author[100];
 	cout << "Введите название книги: ";
@@ -294,7 +297,6 @@ void SearchBookByAuthor(ArrayBooks& b)
 	if (flag == false)
 	{
 		cout << "Книга не найдена!";
-		_getch();
 	}
 	_getch();
 	return;
@@ -323,7 +325,6 @@ void BookSearchByTitle(ArrayBooks& b)
 	if (flag == false)
 	{
 		cout << "Книга не найдена!";
-		_getch();
 	}
 	_getch();
 	return;
@@ -396,4 +397,47 @@ void SortBooksByPublisher(ArrayBooks& b)
 
 	cout << "Список отсортирован!\n ";
 	_getch();
+}
+
+// Загрузка списка книг из файла
+void LoadFromFile(ArrayBooks& b)
+{
+	//1.15.20
+	FILE* f2 = nullptr;
+	fopen_s(&f2, "books.txt", "rb");
+	if (f2 == nullptr) // если нету файла со списком кни, то выходим
+		return;
+	int lenght = _filelength(_fileno(f2));
+	int numBooksInFile = lenght / sizeof(Book);
+	int new_num = b.Count + numBooksInFile;
+	if (b.Size < new_num)
+	{
+		b.Size = new_num + b.Block - new_num % b.Block;
+		Book** temp = new Book * [b.Size];
+		for (int i = 0; i < b.Count; i++)
+			temp[i] = b.PtrBook[i];
+		delete[]b.PtrBook;
+		b.PtrBook = temp;
+	}
+	for (int i = 0; i < numBooksInFile; i++)
+	{
+		Book* book = new Book;
+		fread(book, sizeof(Book), 1, f2);
+		b.PtrBook[b.Count++] = book;
+	}
+	fclose(f2);
+}
+
+// Сохранение списка книг в файл
+void SaveToFile(ArrayBooks b)
+{
+	if (b.Count == 0) // если в списке нету книг, то ничего не сохраняем в файл и выходим
+		return;
+	FILE* f1 = nullptr;
+	fopen_s(&f1, "books.txt", "wb");
+	for (int i = 0; i < b.Count; i++)
+	{
+		fwrite(b.PtrBook[i], sizeof(Book), 1, f1);
+	}
+	fclose(f1);
 }

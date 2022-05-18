@@ -59,3 +59,9 @@ void SortBooksByAuthor(ArrayBooks& b);
 
 // Сортировка книг по издательству
 void SortBooksByPublisher(ArrayBooks& b);
+
+// Загрузка списка книг из файла
+void LoadFromFile(ArrayBooks& b);
+
+// Сохранение списка книг в файл
+void SaveToFile(ArrayBooks b);
